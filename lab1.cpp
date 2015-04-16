@@ -40,7 +40,7 @@
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 600
 
-#define MAX_PARTICLES 40000  //Maximum particles to be displayed
+#define MAX_PARTICLES 8000  //Maximum particles to be displayed
 #define GRAVITY .1         //Constant force appliced to particle's velocity
 
 //X Windows variables
@@ -194,12 +194,7 @@ void init_opengl(void)
 void makeParticle(Game *game, int x, int y) {
     if (game->n >= MAX_PARTICLES)
 	return;
-    //std::cout << "makeParticle() " << x << " " << y << std::endl;
-    //position of particle
    
-    //std::cout << "num: " << rand() << std::endl; 
-    //glColor3ub(rand(), 255, 255);
-
     Particle *p = &game->particle[game->n];    //n as spot where we can add to the array
     p->s.center.x = x;
     p->s.center.y = y;
@@ -242,9 +237,9 @@ void check_mouse(XEvent *e, Game *game)
 
 
 	int y = WINDOW_HEIGHT - e->xbutton.y;
-	for(int i=0; i<10; i++) 	//Original value was 10
+	for(int i=0; i<20; i++) { 	//Original value was 10
 	    makeParticle(game, e->xbutton.x, y);
-
+        } 
 
 	game->lastMouse[0] = savex;
 	game->lastMouse[1] = WINDOW_HEIGHT - savey;
@@ -296,6 +291,7 @@ void movement(Game *game)
 
 		p->s.center.y = game->box[j].center.y + game->box[j].height + 0.1;  //Change center
 		p->velocity.y *= rnd() * -0.5;    //Half of velocity lost with box collision
+		p->velocity.x += 0.1;
 	    }
 	}
 
@@ -314,7 +310,7 @@ void movement(Game *game)
 	    //p->velocity.x += -3;
 	    //p->velocity.y += 5;
 	    p->velocity.x += (d0/dist) * 2.0;
-	    p->velocity.y += (d1/dist) * 2.0;
+	    p->velocity.y += (d1/dist) * 0.5;  // Was 2.0
 	}
 
 	//check for off-screen, replace offscreen particles in array with end of array particle
@@ -395,7 +391,7 @@ void render(Game *game)
     }
 
 
-    /*glMatrixMode(GL_PROJECTION);
+/*    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0,0,100,50,-1,1);
     glMatrixMode(GL_MODELVIEW);
