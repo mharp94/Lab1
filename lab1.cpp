@@ -196,6 +196,10 @@ void makeParticle(Game *game, int x, int y) {
 	return;
     //std::cout << "makeParticle() " << x << " " << y << std::endl;
     //position of particle
+   
+    //std::cout << "num: " << rand() << std::endl; 
+    //glColor3ub(rand(), 255, 255);
+
     Particle *p = &game->particle[game->n];    //n as spot where we can add to the array
     p->s.center.x = x;
     p->s.center.y = y;
@@ -376,13 +380,13 @@ void render(Game *game)
     //glColor3ub(150,160,220);	//This will work within the for loop
 
     for(int i=0; i<game->n; i++) {
-	glColor3ub(rand()%150,rand()%160,rand()%220); //Disco colors
-	//glColor3ub((rand()%(170-110)) + 110, 160, 220);
+	//glColor3ub(rand()%150,rand()%160,rand()%220); //Disco colors
+	glColor3ub(rand()%150, rand()%100, 255);
+	
 	Vec *c = &game->particle[i].s.center;
 	w = 2;
 	h = 2;
 	glBegin(GL_QUADS);
-	//glColor3ub((rand()%(170-120)) + 120, 160, 220);
 	glVertex2i(c->x-w, c->y-h);
 	glVertex2i(c->x-w, c->y+h);
 	glVertex2i(c->x+w, c->y+h);
