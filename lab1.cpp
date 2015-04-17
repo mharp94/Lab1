@@ -50,6 +50,8 @@ GLXContext glc;
 
 //Structures
 
+bool d, f;
+
 struct Vec {
     float x, y, z;
 };
@@ -63,6 +65,7 @@ struct Shape {
 struct Particle {
     Shape s;
     Vec velocity;
+    Vec colors;
 };
 
 struct Game {
@@ -111,7 +114,7 @@ void render(Game *game);
 
 int main(void)
 {
-    int done=0;
+    int done = 0;
     srand(time(NULL));
     initXWindows();
     init_opengl();
@@ -201,6 +204,10 @@ void makeParticle(Game *game, int x, int y) {
     p->velocity.y = rnd() - 0.5;     //Random movement of particles
     p->velocity.x = rnd() - 0.5;
 
+    p->colors.x = rand()%102;
+    p->colors.y = rand()%178;
+    p->colors.z = 255;
+    
     game->n++;
 }
 
@@ -258,8 +265,15 @@ int check_keys(XEvent *e, Game *game)
 	if (key == XK_b) {
 	    game->bubbles = !game->bubbles;
 	}
+	if(key == XK_d) {
+	    d = 1;
+	    if(f == 0) {
+		d = 0;
+	    }
+	    f = 1;
+	}
+     }
 
-    }
     return 0;
 }
 
@@ -376,9 +390,18 @@ void render(Game *game)
     //glColor3ub(150,160,220);	//This will work within the for loop
 
     for(int i=0; i<game->n; i++) {
-	//glColor3ub(rand()%150,rand()%160,rand()%220); //Disco colors
-	glColor3ub(rand()%150, rand()%100, 255);
 	
+	Vec *rgb = &game->particle[i].colors;
+	if(d == 1) {
+		glColor3ub(rand()%255,rand()%255,rand()%255); //Disco colors
+		f = 0;
+	}
+	else {
+	    //glColor3ub(150,160,220);
+	    glColor3ub(rgb->x, rgb->y, rgb->z);
+	}
+	//glColor3ub(rand()%150, rand()%100, 255);
+	//glColor3ub(&game->particle[i].colors.x, &game->particle[i].colors.y, &game->particle[i].colors.z);
 	Vec *c = &game->particle[i].s.center;
 	w = 2;
 	h = 2;
