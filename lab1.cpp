@@ -50,7 +50,7 @@ GLXContext glc;
 
 //Structures
 
-bool d, f;
+bool d;
 
 struct Vec {
     float x, y, z;
@@ -266,11 +266,7 @@ int check_keys(XEvent *e, Game *game)
 	    game->bubbles = !game->bubbles;
 	}
 	if(key == XK_d) {
-	    d = 1;
-	    if(f == 0) {
-		d = 0;
-	    }
-	    f = 1;
+	    d = !d;
 	}
      }
 
@@ -394,7 +390,6 @@ void render(Game *game)
 	Vec *rgb = &game->particle[i].colors;
 	if(d == 1) {
 		glColor3ub(rand()%255,rand()%255,rand()%255); //Disco colors
-		f = 0;
 	}
 	else {
 	    //glColor3ub(150,160,220);
