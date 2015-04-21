@@ -35,7 +35,9 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 
-//#include <"fonts.h">
+extern "C" {
+#include "fonts.h"
+}
 
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 600
@@ -336,6 +338,7 @@ void movement(Game *game)
 
 void render(Game *game)
 {
+    Rect t[7];
     float w, h;
     glClear(GL_COLOR_BUFFER_BIT);
     //Draw shapes...
@@ -408,18 +411,33 @@ void render(Game *game)
 	glEnd();
     }
 
+    t[5].bot = WINDOW_HEIGHT - 20;
+    t[6].bot = WINDOW_HEIGHT - 100;
 
-/*    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0,0,100,50,-1,1);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluOrtho2D(0,100,0,50);
-    Rect r;	
-    r.bot = 50/2 + 30;
-    r.left = 100/2 - 100;
-    r.center = 0;
-    ggprint16(&r,36,0x00cdc2c2,"Text"); */
+    t[5].left = 10;
+    t[6].left = 10;
+
+    ggprint8b(&t[5], 16, 0x00ffffff, "Waterfall Model");
+    ggprint8b(&t[6], 16, 0x00fffff, "Press d for disco");
+
+    for(int i=0; i<=4; i++) {
+        s = &game->box[i];
+        t[i].bot = s->center.y - 10;
+        t[i].left = s->center.x;
+        t[i].center = 1;
+        int cref = 0x00ffffff;
+
+        if(i == 0)
+            ggprint16(&t[i], 16, cref, "Requirements");
+        if(i == 1)
+            ggprint16(&t[i], 16, cref, "Design");
+        if(i == 2)
+            ggprint16(&t[i], 16, cref, "Coding");
+        if(i == 3)
+            ggprint16(&t[i], 16, cref, "Testing");
+        if(i == 4)
+            ggprint16(&t[i], 16, cref, "Maintenance");
+    }
 
     glPopMatrix();
 }
