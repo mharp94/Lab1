@@ -403,7 +403,7 @@ void render(Game *game)
         t[i].bot = s->center.y - 10;
         t[i].left = s->center.x;
         t[i].center = 1;
-        int cref = 0x00ffffff;
+        int cref = 0x00ffff00;
 
         if(i == 0)
             ggprint16(&t[i], 16, cref, "Requirements");
