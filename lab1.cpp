@@ -191,6 +191,9 @@ void init_opengl(void)
     glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, -1, 1);
     //Set the screen background color
     glClearColor(0.1, 0.1, 0.1, 1.0);
+    //Fonts
+    glEnable(GL_TEXTURE_2D);
+    initialize_fonts();
 }
 
 #define rnd() (float)rand() / (float)RAND_MAX
@@ -205,8 +208,8 @@ void makeParticle(Game *game, int x, int y) {
     p->velocity.y = rnd() - 0.5;     //Random movement of particles
     p->velocity.x = rnd() - 0.5;
 
-    p->colors.x = rand()%102;
-    p->colors.y = rand()%178;
+    p->colors.x = rand()%102; //102
+    p->colors.y = rand()%170; //178
     p->colors.z = 255;
     
     game->n++;
@@ -339,7 +342,7 @@ void movement(Game *game)
 
 void render(Game *game)
 {
-    Rect r[6];
+    Rect t[7];
     float w, h;
     glClear(GL_COLOR_BUFFER_BIT);
     //Draw shapes...
@@ -385,33 +388,33 @@ void render(Game *game)
 	glPopMatrix();
     }
 
-    r[5].bot = WINDOW_HEIGHT - 20;
-    r[5].left = 10;
-    r[5].center = 0;
-    //t[6].bot = WINDOW_HEIGHT - 100;
-    //t[6].left = 10;
-    //t[6].center = 0;
+    t[5].bot = WINDOW_HEIGHT - 20;
+    t[5].left = 10;
+    t[5].center = 0;
+    t[6].bot = WINDOW_HEIGHT - 590;
+    t[6].left = 10;
+    t[6].center = 0;
 
-    ggprint8b(&r[5], 16, 0x00ffffff, "Waterfall Model");
-    //ggprint8b(&t[6], 16, 0x00ffffff, "Press d for disco");
+    ggprint8b(&t[5], 16, 0x00ffffff, "Waterfall Model");
+    ggprint8b(&t[6], 16, 0x00ffffff, "Press d for disco");
 
     for(int i=0; i<5; i++) {
         s = &game->box[i];
-        r[i].bot = s->center.y - 10;
-        r[i].left = s->center.x;
-        r[i].center = 1;
+        t[i].bot = s->center.y - 10;
+        t[i].left = s->center.x;
+        t[i].center = 1;
         int cref = 0x00ffffff;
 
         if(i == 0)
-            ggprint16(&r[i], 16, cref, "Requirements");
+            ggprint16(&t[i], 16, cref, "Requirements");
         if(i == 1)
-            ggprint16(&r[i], 16, cref, "Design");
+            ggprint16(&t[i], 16, cref, "Design");
         if(i == 2)
-            ggprint16(&r[i], 16, cref, "Coding");
+            ggprint16(&t[i], 16, cref, "Coding");
         if(i == 3)
-            ggprint16(&r[i], 16, cref, "Testing");
+            ggprint16(&t[i], 16, cref, "Testing");
         if(i == 4)
-            ggprint16(&r[i], 16, cref, "Maintenance");
+            ggprint16(&t[i], 16, cref, "Maintenance");
     }
 
     //draw all particles here
@@ -425,11 +428,8 @@ void render(Game *game)
 		glColor3ub(rand()%255,rand()%255,rand()%255); //Disco colors
 	}
 	else {
-	    //glColor3ub(150,160,220);
 	    glColor3ub(rgb->x, rgb->y, rgb->z);
 	}
-	//glColor3ub(rand()%150, rand()%100, 255);
-	//glColor3ub(&game->particle[i].colors.x, &game->particle[i].colors.y, &game->particle[i].colors.z);
 	Vec *c = &game->particle[i].s.center;
 	w = 2;
 	h = 2;
