@@ -100,7 +100,6 @@ struct Game {
 	    box[i].center.y = 500 - i*60;
 	    box[i].center.z = 0;
 	}
-
     }
 };
 
@@ -280,7 +279,9 @@ void movement(Game *game)
     Particle *p;
 
     if(game->bubbles) {
+	for(int i=0; i < 10; i++) {
 	makeParticle(game, game->lastMouse[0], game->lastMouse[1]);
+	}
     }
 
     if (game->n <= 0)
@@ -303,7 +304,7 @@ void movement(Game *game)
 
 		p->s.center.y = game->box[j].center.y + game->box[j].height + 0.1;  //Change center
 		p->velocity.y *= rnd() * -0.5;    //Half of velocity lost with box collision
-		p->velocity.x += 0.1;
+		p->velocity.x += 0.035;
 	    }
 	}
 
@@ -329,8 +330,8 @@ void movement(Game *game)
 	if (p->s.center.y < 0.0) {
 	    memcpy(&game->particle[i], &game->particle[game->n-1],
 		    sizeof(Particle)); 
-	    std::cout << "off screen" << std::endl;
-	    std::cout << game->n << std::endl;
+	    //std::cout << "off screen" << std::endl;
+	    //std::cout << game->n << std::endl;
 	    game->n--;
 	}
     }
@@ -338,7 +339,7 @@ void movement(Game *game)
 
 void render(Game *game)
 {
-    Rect t[7];
+    Rect r[6];
     float w, h;
     glClear(GL_COLOR_BUFFER_BIT);
     //Draw shapes...
@@ -384,6 +385,35 @@ void render(Game *game)
 	glPopMatrix();
     }
 
+    r[5].bot = WINDOW_HEIGHT - 20;
+    r[5].left = 10;
+    r[5].center = 0;
+    //t[6].bot = WINDOW_HEIGHT - 100;
+    //t[6].left = 10;
+    //t[6].center = 0;
+
+    ggprint8b(&r[5], 16, 0x00ffffff, "Waterfall Model");
+    //ggprint8b(&t[6], 16, 0x00ffffff, "Press d for disco");
+
+    for(int i=0; i<5; i++) {
+        s = &game->box[i];
+        r[i].bot = s->center.y - 10;
+        r[i].left = s->center.x;
+        r[i].center = 1;
+        int cref = 0x00ffffff;
+
+        if(i == 0)
+            ggprint16(&r[i], 16, cref, "Requirements");
+        if(i == 1)
+            ggprint16(&r[i], 16, cref, "Design");
+        if(i == 2)
+            ggprint16(&r[i], 16, cref, "Coding");
+        if(i == 3)
+            ggprint16(&r[i], 16, cref, "Testing");
+        if(i == 4)
+            ggprint16(&r[i], 16, cref, "Maintenance");
+    }
+
     //draw all particles here
     glPushMatrix();
     //glColor3ub(150,160,220);	//This will work within the for loop
@@ -409,34 +439,6 @@ void render(Game *game)
 	glVertex2i(c->x+w, c->y+h);
 	glVertex2i(c->x+w, c->y-h);
 	glEnd();
-    }
-
-    t[5].bot = WINDOW_HEIGHT - 20;
-    t[6].bot = WINDOW_HEIGHT - 100;
-
-    t[5].left = 10;
-    t[6].left = 10;
-
-    ggprint8b(&t[5], 16, 0x00ffffff, "Waterfall Model");
-    ggprint8b(&t[6], 16, 0x00fffff, "Press d for disco");
-
-    for(int i=0; i<=4; i++) {
-        s = &game->box[i];
-        t[i].bot = s->center.y - 10;
-        t[i].left = s->center.x;
-        t[i].center = 1;
-        int cref = 0x00ffffff;
-
-        if(i == 0)
-            ggprint16(&t[i], 16, cref, "Requirements");
-        if(i == 1)
-            ggprint16(&t[i], 16, cref, "Design");
-        if(i == 2)
-            ggprint16(&t[i], 16, cref, "Coding");
-        if(i == 3)
-            ggprint16(&t[i], 16, cref, "Testing");
-        if(i == 4)
-            ggprint16(&t[i], 16, cref, "Maintenance");
     }
 
     glPopMatrix();
